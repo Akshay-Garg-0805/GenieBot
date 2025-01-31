@@ -1,12 +1,9 @@
+import openai
 import streamlit as st
-from openai import OpenAI
 import time
 
-# Set up the OpenAI client with your API credentials
-client = OpenAI(
-    base_url="https://integrate.api.nvidia.com/v1",
-    api_key="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"  # Replace with your API key
-)
+# Set your OpenAI API key (ensure it's kept safe, ideally using environment variables)
+openai.api_key = "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"
 
 # Set Streamlit app theme and styling with custom CSS
 st.markdown("""
@@ -89,25 +86,16 @@ if st.button("🚀 Generate Response"):
         with placeholder.container():
             st.write("🌀 Fetching your answer...")
 
-        # Requesting response from the AI model
-        completion = client.chat.completions.create(
-            model="nvidia/llama-3.1-nemotron-70b-instruct",  # This remains for backend; no need to mention it in frontend.
+        # Requesting response from the OpenAI model
+        response = openai.ChatCompletion.create(
+            model="nvidia/llama-3.1-nemotron-70b-instruct",  # Use OpenAI's GPT model (you can replace it with any available model)
             messages=[{"role": "user", "content": user_input}],
             temperature=0.5,
-            top_p=1,
-            max_tokens=1024,
-            stream=True
+            max_tokens=1024
         )
-
-        # Display the response chunk by chunk
-        response = ""
-        for chunk in completion:
-            if chunk.choices[0].delta.content is not None:
-                response += chunk.choices[0].delta.content
-                time.sleep(0.1)  # Adding slight delay to mimic real-time typing
 
         # Display the final response
         st.markdown(f"### 🤖 **GenieBot's Response:**")
-        st.markdown(f"<div style='font-size: 20px; color: #fff; background-color: #333; padding: 10px 15px; border-radius: 15px;'>{response}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='font-size: 20px; color: #fff; background-color: #333; padding: 10px 15px; border-radius: 15px;'>{response['choices'][0]['message']['content']}</div>", unsafe_allow_html=True)
     else:
         st.error("Please enter a message to chat with GenieBot.")
