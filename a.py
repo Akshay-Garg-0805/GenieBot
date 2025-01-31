@@ -5,7 +5,7 @@ import time
 # Set up the OpenAI client with your API credentials
 client = OpenAI(
     base_url="https://integrate.api.nvidia.com/v1",
-    api_key="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"
+    api_key="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"
 )
 
 # Set Streamlit app theme and styling with custom CSS
