@@ -8,6 +8,63 @@ client = OpenAI(
     api_key="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"
 )
 
+# Set Streamlit app theme and styling with custom CSS
+st.markdown("""
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff7b00, #ff4b00, #ff0000);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        .stTextInput>div>div>input {
+            background-color: #f4f4f4;
+            color: #333;
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 18px;
+        }
+
+        .stButton>button {
+            background-color: #ff6f61;
+            color: white;
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        .stButton>button:hover {
+            background-color: #ff4d3f;
+            cursor: pointer;
+        }
+
+        .stText {
+            font-size: 20px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .stMarkdown {
+            font-size: 22px;
+            color: #f9f9f9;
+            font-family: 'Verdana', sans-serif;
+            text-align: center;
+        }
+        .stTextInput input::placeholder {
+            color: #888;
+        }
+
+        /* Styling the input text box */
+        .stTextInput>div>div {
+            background-color: #f4f4f4;
+            border-radius: 12px;
+        }
+
+        .stTextInput input {
+            color: #333;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
 # Streamlit app title with some cool emoji
 st.title("💬 Chat with GenieBot 💬")
 st.markdown("<h3 style='text-align: center; color: white;'>Your Personal AI Chat Assistant 🚀</h3>", unsafe_allow_html=True)
@@ -18,17 +75,6 @@ st.markdown("""
         Enter your message below and let GenieBot handle it! ✨
     </div>
     """, unsafe_allow_html=True)
-
-# Initialize conversation history in session_state if not already initialized
-if "conversation" not in st.session_state:
-    st.session_state.conversation = []
-
-# Display previous conversation
-for msg in st.session_state.conversation:
-    if msg["role"] == "user":
-        st.markdown(f"**You:** {msg['content']}")
-    else:
-        st.markdown(f"**GenieBot:** {msg['content']}")
 
 # Text input box for user input
 user_input = st.text_input("💬 Type your message:", placeholder="Ask me anything!")
@@ -42,9 +88,6 @@ if st.button("🚀 Generate Response"):
         # Show loading message while waiting for response
         with placeholder.container():
             st.write("🌀 Fetching your answer...")
-
-        # Store user message in conversation history
-        st.session_state.conversation.append({"role": "user", "content": user_input})
 
         # Requesting response from the AI model
         completion = client.chat.completions.create(
@@ -63,11 +106,11 @@ if st.button("🚀 Generate Response"):
                 response += chunk.choices[0].delta.content
                 time.sleep(0.1)  # Adding slight delay to mimic real-time typing
 
-        # Store bot response in conversation history
-        st.session_state.conversation.append({"role": "assistant", "content": response})
-
         # Display the final response
         st.markdown(f"### 🤖 **GenieBot's Response:**")
         st.markdown(f"<div style='font-size: 20px; color: #fff; background-color: #333; padding: 10px 15px; border-radius: 15px;'>{response}</div>", unsafe_allow_html=True)
     else:
         st.error("Please enter a message to chat with GenieBot.")
+
+
+Can we make it like a continuous chat like after the response another text box appears below answer
