@@ -112,5 +112,3 @@ if st.button("🚀 Generate Response"):
     else:
         st.error("Please enter a message to chat with GenieBot.")
 
-
-Can we make it like a continuous chat like after the response another text box appears below answer
